@@ -33,3 +33,177 @@ const render = require("./lib/htmlRenderer");
 // for further information. Be sure to test out each class and verify it generates an
 // object with the correct structure and methods. This structure will be crucial in order
 // for the provided `render` function to work! ```
+let employeeID = 1;
+let employeeList = [];
+
+function managerPrompt() {
+    inquirer.prompt([
+        {
+            type: "input",
+            message: "Manager name:",
+            name: "managerName"
+        },
+        {
+            type: "input",
+            message: "email address?",
+            name: "managerEmail"
+        },
+        {
+            type: "input",
+            message: "Office number?",
+            name: "office"
+        },
+    ])
+        .then(function (response) {
+            let managerName = response.managerName;
+            let managerEmail = response.managerEmail;
+            let office = response.office;
+            let manager = new Manager(
+                managerName,
+                employeeID,
+                managerEmail,
+                office
+            );
+            employeeList.push(manager);
+            employeeID++;
+
+            console.log(`
+                we will now collect info on employees
+            `);
+            employeePrompt();
+        });
+}
+function employeePrompt() {
+    inquirer.prompt([
+        {
+            type: "list",
+            message: "what type of employee",
+            choices: ["engineer", "intern"],
+            name: "employeeType"
+        },
+        {
+            type: "input",
+            message: "employee name?",
+            name: "employeeName"
+        },
+        {
+            type: "input",
+            message: "employee email",
+            name: "employeeEmail"
+        }
+    ]).then(function (response) {
+        let employeeType = response.employeeType;
+        let employeeName = response.employeeName;
+        let employeeEmail = response.employeeEmail;
+
+        if (employeeType === "engineer") {
+            inquirer.prompt([
+                {
+                    type: "input",
+                    message: "github username?",
+                    name: "githubName"
+                },
+                {
+                    type: "list",
+                    message: "do you have more employees?",
+                    choices: ["yes", "no"],
+                    name: "newEmployees"
+                }
+            ])
+                .then(function (response) {
+                    let employeeGithub = response.githubName;
+                    let engineer = new Engineer(
+                        employeeName,
+                        employeeID,
+                        employeeEmail,
+                        employeeGithub
+                    );
+
+                    employeeList.push(engineer);
+                    employeeID++;
+
+                    if (response.newEmployees === "yes") {
+                        employeePrompt();
+                    } else {
+                        generatePage();
+                        return
+                    }
+                });
+        } else {
+            inquirer.prompt([
+                {
+                    type: "input",
+                    message: "what school?",
+                    name: "school"
+                },
+                {
+                    type: "list",
+                    message: "do you have more employees?",
+                    choices: ["yes", "no"],
+                    name: "newEmployees"
+                }
+
+            ]).then(function (response) {
+                let school = response.school;
+
+                let intern = new Intern(
+                    employeeName,
+                    employeeID,
+                    employeeEmail,
+                    school);
+                employeeList.push(intern);
+                employeeID++;
+                if (response.newEmployees === "yes") {
+                    employeePrompt();
+                } else {
+                    generatePage();
+                    return;
+                }
+            });
+        }
+    })
+}
+function generatePage() {
+    let allCards = "";
+
+    employeeList.forEach(item => {
+        let cardString = item.createCard();
+        allCards += cardString;
+    });
+    var html = `
+    <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <title>Team Roster</title>
+</head>
+<body>
+<div
+class="container-fluid bg-danger text-center d-flex align-items-center justify-content-center"
+style="height: 20vh"
+>
+<div class="h1 text-white" style="display: inline-block;">
+   My Team
+</div>
+</div>
+<div class="container mt-5">
+
+<div class="card-deck d-inline-flex justify-content-center">
+   ${allCards}
+</div>
+
+</div>
+</body>
+</html>
+    `;
+    fs.writeFile("index.html", html, function(err){
+        if (err){
+            return console.log(err);
+        }    })
+
+
+}
+managerPrompt();
