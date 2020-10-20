@@ -125,7 +125,7 @@ function employeePrompt() {
                     if (response.newEmployees === "yes") {
                         employeePrompt();
                     } else {
-                        generatePage();
+                        render();
                         return
                     }
                 });
@@ -156,54 +156,11 @@ function employeePrompt() {
                 if (response.newEmployees === "yes") {
                     employeePrompt();
                 } else {
-                    generatePage();
+                   render();
                     return;
                 }
             });
         }
     })
-}
-function generatePage() {
-    let allCards = "";
-
-    employeeList.forEach(item => {
-        let cardString = item.createCard();
-        allCards += cardString;
-    });
-    var html = `
-    <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-    <title>Team Roster</title>
-</head>
-<body>
-<div
-class="container-fluid bg-danger text-center d-flex align-items-center justify-content-center"
-style="height: 20vh"
->
-<div class="h1 text-white" style="display: inline-block;">
-   My Team
-</div>
-</div>
-<div class="container mt-5">
-
-<div class="card-deck d-inline-flex justify-content-center">
-   ${allCards}
-</div>
-
-</div>
-</body>
-</html>
-    `;
-    fs.writeFile("index.html", html, function(err){
-        if (err){
-            return console.log(err);
-        }    })
-
-
 }
 managerPrompt();
