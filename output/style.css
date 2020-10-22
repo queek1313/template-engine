@@ -1,6 +1,7 @@
 .card {
     margin-right: 40px;
 }
+
 #engineer{
     background-color: rgb(112, 112, 209);
 }
@@ -9,4 +10,7 @@
 }
 #intern{
     background-color: green;
+}
+.jumbotron {
+    background-color: grey;
 }

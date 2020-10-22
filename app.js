@@ -125,7 +125,7 @@ function employeePrompt() {
                     if (response.newEmployees === "yes") {
                         employeePrompt();
                     } else {
-                        console.log("trigger")
+                        // console.log("trigger")
                         if (!fs.existsSync(OUTPUT_DIR)) {
                             fs.mkdirSync(OUTPUT_DIR)
                           }
@@ -159,7 +159,7 @@ function employeePrompt() {
                 if (response.newEmployees === "yes") {
                     employeePrompt();
                 } else {
-                    console.log("trigger")
+                    // console.log("trigger")
                     if (!fs.existsSync(OUTPUT_DIR)) {
                         fs.mkdirSync(OUTPUT_DIR)
                       }
