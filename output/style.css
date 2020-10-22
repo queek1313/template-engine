@@ -1,0 +1,12 @@
+.card {
+    margin-right: 40px;
+}
+#engineer{
+    background-color: rgb(112, 112, 209);
+}
+#manager{
+    background-color: red;
+}
+#intern{
+    background-color: green;
+}
